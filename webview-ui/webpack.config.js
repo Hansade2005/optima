@@ -1,12 +1,12 @@
-const path = require('path');
+import path from 'path';
 
-module.exports = {
+export default {
     entry: {
         sidebar: './src/sidebar.tsx',
         account: './src/account.tsx'
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(process.cwd(), 'dist'),
         filename: '[name].js',
     },
     module: {
@@ -27,7 +27,7 @@ module.exports = {
     },
     devServer: {
         static: {
-            directory: path.join(__dirname, 'dist'),
+            directory: path.join(process.cwd(), 'dist'),
         },
         compress: true,
         port: 9000,
