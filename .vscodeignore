@@ -1,0 +1,102 @@
+<<<<<<< HEAD
+# Default
+.github/**
+.husky/**
+.vscode/**
+.vscode-test/**
+out/**
+node_modules/**
+src/**
+.gitignore
+.yarnrc
+esbuild.js
+vsc-extension-quickstart.md
+**/tsconfig.json
+**/.eslintrc.json
+**/*.map
+**/*.ts
+**/.vscode-test.*
+
+# Custom
+demo.gif
+.nvmrc
+.gitattributes
+.prettierignore
+
+# Ignore all webview-ui files except the build directory (https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/frameworks/hello-world-react-cra/.vscodeignore)
+=======
+# VS Code specific files
+.vscode/**
+.vscode-test/**
+
+# Source code
+src/**
+**/*.ts
+**/*.map
+**/.eslintrc.json
+.prettierrc
+.prettierignore
+**/*.map
+**/*.ts
+
+# Build outputs and configs
+out/**
+node_modules/**
+.gitignore
+tsconfig.json
+webpack.config.js
+esbuild.js
+build-emergency.js
+.eslintrc.json
+.git
+.github
+.husky
+
+# Tests
+**/__tests__/**
+**/__mocks__/**
+**/test/**
+**/*.test.ts
+
+# Other
+.changeset
+.clinerules
+.git-blame-ignore-revs
+.gitconfig
+.npmrc
+.nvmrc
+
+# Custom
+demo.gif
+.gitattributes
+
+# Ignore all webview-ui files except the build directory
+>>>>>>> 3cf26ac7f905eaeb8535f7a0a000137528dc6856
+webview-ui/src/**
+webview-ui/public/**
+webview-ui/scripts/**
+webview-ui/index.html
+webview-ui/README.md
+webview-ui/package.json
+webview-ui/package-lock.json
+webview-ui/node_modules/**
+**/.gitignore
+
+<<<<<<< HEAD
+# Fix issue where codicons don't get packaged (https://github.com/microsoft/vscode-extension-samples/issues/692)
+!node_modules/@vscode/codicons/dist/codicon.css
+!node_modules/@vscode/codicons/dist/codicon.ttf
+
+# Include default themes JSON files used in getTheme
+!src/integrations/theme/default-themes/**
+
+=======
+# CRITICAL: Make sure these files are NOT ignored
+!dist/**/*.js
+!webview-ui/build/**
+!node_modules/@vscode/codicons/dist/codicon.css
+!node_modules/@vscode/codicons/dist/codicon.ttf
+
+>>>>>>> 3cf26ac7f905eaeb8535f7a0a000137528dc6856
+# Include icons
+!assets/icons/**

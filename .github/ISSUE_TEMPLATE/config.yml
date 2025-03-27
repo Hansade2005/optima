@@ -1,0 +1,19 @@
+blank_issues_enabled: false
+contact_links:
+    - name: Feature Request
+<<<<<<< HEAD
+      url: https://github.com/RooVetGit/Roo-Code/discussions/categories/feature-requests
+      about: Share and vote on feature requests for Roo Code
+    - name: Leave a Review
+      url: https://marketplace.visualstudio.com/items?itemName=RooVeterinaryInc.roo-cline&ssr=false#review-details
+      about: Enjoying Roo Code? Leave a review here!
+=======
+      url: https://github.com/Hans/optima-ai/discussions/categories/feature-requests
+      about: Request a feature or share an idea
+    - name: Ask a Question
+      url: https://github.com/Hans/optima-ai/discussions/categories/q-a
+      about: Please ask and answer questions here
+    - name: Leave a Review
+      url: https://marketplace.visualstudio.com/items?itemName=Hans.optima-ai&ssr=false#review-details
+      about: Rate and review the extension on VS Marketplace
+>>>>>>> 3cf26ac7f905eaeb8535f7a0a000137528dc6856
