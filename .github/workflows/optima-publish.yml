@@ -34,11 +34,23 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install -g vsce
-          pnpm install
-          cd webview-ui
-          pnpm install
-          cd ..
+          # Install the up-to-date vsce package
+          npm install -g @vscode/vsce
+          
+          # Detect if package-lock.json exists to determine if npm is being used
+          if [ -f "package-lock.json" ]; then
+            echo "Using npm as package manager"
+            npm install
+            cd webview-ui
+            npm install
+            cd ..
+          else
+            echo "Using pnpm as package manager"
+            pnpm install
+            cd webview-ui
+            pnpm install
+            cd ..
+          fi
 
       - name: Package Extension
         id: package
@@ -53,9 +65,11 @@ jobs:
             echo "Warning: Found merge conflicts in package.json, attempting to fix"
             # Choose the HEAD version
             sed -i '/<<<<<<< HEAD/,/>>>>>>>/d' package.json
-            # Or you can choose a specific publisher
-            sed -i 's/"publisher": ".*"/"publisher": "OptimaAI"/' package.json
           fi
+          
+          # Check if publisher is set properly
+          current_publisher=$(node -p "require('./package.json').publisher")
+          echo "Current publisher: ${current_publisher}"
           
           # Build webview UI
           echo "Building webview UI..."
@@ -69,19 +83,26 @@ jobs:
             sed -i '/>>>>>>> .*/d' package.json
           fi
           
-          # Try to build with webpack first, fallback to vite if needed
-          if grep -q "\"build\": \"webpack" package.json; then
-            echo "Using webpack build"
-            pnpm run build
-            # Create build/assets directory if webpack outputs to dist
-            if [ -d "dist" ] && [ ! -d "build/assets" ]; then
-              mkdir -p build/assets
-              cp dist/*.js build/assets/
-              cp dist/*.css build/assets/ 2>/dev/null || :
-            fi
+          # Detect package manager to use
+          if [ -f "../package-lock.json" ]; then
+            echo "Using npm for webview build"
+            npm run build
           else
-            echo "Using vite build"
-            pnpm run build
+            echo "Using pnpm for webview build"
+            # Try to build with webpack first, fallback to vite if needed
+            if grep -q "\"build\": \"webpack" package.json; then
+              echo "Using webpack build"
+              pnpm run build
+              # Create build/assets directory if webpack outputs to dist
+              if [ -d "dist" ] && [ ! -d "build/assets" ]; then
+                mkdir -p build/assets
+                cp dist/*.js build/assets/
+                cp dist/*.css build/assets/ 2>/dev/null || :
+              fi
+            else
+              echo "Using vite build"
+              pnpm run build
+            fi
           fi
           cd ..
           
@@ -109,11 +130,23 @@ jobs:
           
           # Build VSIX package
           echo "Building VSIX package..."
-          pnpm run vsix || {
-            echo "Regular build failed, attempting emergency build..."
-            node build-emergency.js
-            pnpm run vsix:emergency || pnpm dlx vsce package --no-dependencies
-          }
+          
+          # Detect which package manager to use
+          if [ -f "package-lock.json" ]; then
+            echo "Using npm for packaging"
+            npm run vsix || {
+              echo "Regular build failed, attempting emergency build..."
+              node build-emergency.js
+              npm run vsix:emergency || vsce package --no-dependencies -o bin/$npm_package_name-$npm_package_version.vsix
+            }
+          else
+            echo "Using pnpm for packaging"
+            pnpm run vsix || {
+              echo "Regular build failed, attempting emergency build..."
+              node build-emergency.js
+              pnpm run vsix:emergency || vsce package --no-dependencies -o bin/$npm_package_name-$npm_package_version.vsix
+            }
+          fi
           
           VSIX_PATH="bin/${current_package_name}-${current_package_version}.vsix"
           
