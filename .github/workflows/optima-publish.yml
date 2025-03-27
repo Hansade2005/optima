@@ -268,66 +268,64 @@ jobs:
             echo "Production esbuild failed, trying alternative build..."
             node esbuild.js || {
               echo "Creating minimal extension.js as temporary solution"
-              cat > dist/extension.js << 'EOFEXTENSION'
-              const vscode = require('vscode');
-              
-              function activate(context) {
-                console.log('Optima AI extension activated');
-                
-                // Register webview provider
-                class WebviewProvider {
-                  resolveWebviewView(webviewView) {
-                    webviewView.webview.options = { enableScripts: true };
-                    const scriptPath = webviewView.webview.asWebviewUri(
-                      vscode.Uri.joinPath(context.extensionUri, 'webview-ui', 'build', 'assets', 'index.js')
-                    );
-                    const cssPath = webviewView.webview.asWebviewUri(
-                      vscode.Uri.joinPath(context.extensionUri, 'webview-ui', 'build', 'assets', 'index.css')
-                    );
-                    
-                    webviewView.webview.html = `<!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                      <meta charset="UTF-8">
-                      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                      <link href="${cssPath}" rel="stylesheet">
-                    </head>
-                    <body>
-                      <div id="root">
-                        <h1>Optima AI</h1>
-                        <p>Your AI-powered assistant is ready!</p>
-                      </div>
-                      <script src="${scriptPath}"></script>
-                    </body>
-                    </html>`;
-                  }
-                }
-                
-                context.subscriptions.push(
-                  vscode.window.registerWebviewViewProvider('optima-ai.SidebarProvider', new WebviewProvider())
-                );
-                
-                // Register essential commands
-                const commands = [
-                  'optima-ai.reloadWebview',
-                  'optima-ai.explainCode',
-                  'optima-ai.fixCode',
-                  'optima-ai.improveCode'
-                ];
-                
-                commands.forEach(cmd => {
-                  context.subscriptions.push(
-                    vscode.commands.registerCommand(cmd, () => {
-                      vscode.window.showInformationMessage(`${cmd} command executed`);
-                    })
-                  );
-                });
-              }
-              
-              function deactivate() {}
-              
-              module.exports = { activate, deactivate };
-              EOFEXTENSION
+              echo "const vscode = require('vscode');" > dist/extension.js
+              echo "" >> dist/extension.js
+              echo "function activate(context) {" >> dist/extension.js
+              echo "  console.log('Optima AI extension activated');" >> dist/extension.js
+              echo "" >> dist/extension.js
+              echo "  // Register webview provider" >> dist/extension.js
+              echo "  class WebviewProvider {" >> dist/extension.js
+              echo "    resolveWebviewView(webviewView) {" >> dist/extension.js
+              echo "      webviewView.webview.options = { enableScripts: true };" >> dist/extension.js
+              echo "      const scriptPath = webviewView.webview.asWebviewUri(" >> dist/extension.js
+              echo "        vscode.Uri.joinPath(context.extensionUri, 'webview-ui', 'build', 'assets', 'index.js')" >> dist/extension.js
+              echo "      );" >> dist/extension.js
+              echo "      const cssPath = webviewView.webview.asWebviewUri(" >> dist/extension.js
+              echo "        vscode.Uri.joinPath(context.extensionUri, 'webview-ui', 'build', 'assets', 'index.css')" >> dist/extension.js
+              echo "      );" >> dist/extension.js
+              echo "" >> dist/extension.js
+              echo "      webviewView.webview.html = \`<!DOCTYPE html>" >> dist/extension.js
+              echo "      <html lang=\"en\">" >> dist/extension.js
+              echo "      <head>" >> dist/extension.js
+              echo "        <meta charset=\"UTF-8\">" >> dist/extension.js
+              echo "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" >> dist/extension.js
+              echo "        <link href=\"\${cssPath}\" rel=\"stylesheet\">" >> dist/extension.js
+              echo "      </head>" >> dist/extension.js
+              echo "      <body>" >> dist/extension.js
+              echo "        <div id=\"root\">" >> dist/extension.js
+              echo "          <h1>Optima AI</h1>" >> dist/extension.js
+              echo "          <p>Your AI-powered assistant is ready!</p>" >> dist/extension.js
+              echo "        </div>" >> dist/extension.js
+              echo "        <script src=\"\${scriptPath}\"></script>" >> dist/extension.js
+              echo "      </body>" >> dist/extension.js
+              echo "      </html>\`;" >> dist/extension.js
+              echo "    }" >> dist/extension.js
+              echo "  }" >> dist/extension.js
+              echo "" >> dist/extension.js
+              echo "  context.subscriptions.push(" >> dist/extension.js
+              echo "    vscode.window.registerWebviewViewProvider('optima-ai.SidebarProvider', new WebviewProvider())" >> dist/extension.js
+              echo "  );" >> dist/extension.js
+              echo "" >> dist/extension.js
+              echo "  // Register essential commands" >> dist/extension.js
+              echo "  const commands = [" >> dist/extension.js
+              echo "    'optima-ai.reloadWebview'," >> dist/extension.js
+              echo "    'optima-ai.explainCode'," >> dist/extension.js
+              echo "    'optima-ai.fixCode'," >> dist/extension.js
+              echo "    'optima-ai.improveCode'" >> dist/extension.js
+              echo "  ];" >> dist/extension.js
+              echo "" >> dist/extension.js
+              echo "  commands.forEach(cmd => {" >> dist/extension.js
+              echo "    context.subscriptions.push(" >> dist/extension.js
+              echo "      vscode.commands.registerCommand(cmd, () => {" >> dist/extension.js
+              echo "        vscode.window.showInformationMessage(\`\${cmd} command executed\`);" >> dist/extension.js
+              echo "      })" >> dist/extension.js
+              echo "    );" >> dist/extension.js
+              echo "  });" >> dist/extension.js
+              echo "}" >> dist/extension.js
+              echo "" >> dist/extension.js
+              echo "function deactivate() {}" >> dist/extension.js
+              echo "" >> dist/extension.js
+              echo "module.exports = { activate, deactivate };" >> dist/extension.js
             }
           }
           
