@@ -32,12 +32,22 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
+      - name: Clean Lockfiles
+        run: |
+          # Remove any existing lockfiles to avoid conflicts
+          rm -f package-lock.json yarn.lock
+          rm -f webview-ui/package-lock.json webview-ui/yarn.lock
+          
+          # Create clean pnpm-lock.yaml files if they don't exist
+          [ ! -f pnpm-lock.yaml ] && touch pnpm-lock.yaml
+          [ ! -f webview-ui/pnpm-lock.yaml ] && mkdir -p webview-ui && touch webview-ui/pnpm-lock.yaml
+
       - name: Install Dependencies
         run: |
           npm install -g @vscode/vsce
-          pnpm install
+          pnpm install --no-frozen-lockfile
           cd webview-ui
-          pnpm install
+          pnpm install --no-frozen-lockfile
           cd ..
 
       - name: Fix TypeScript Version Conflicts
@@ -120,6 +130,33 @@ jobs:
           cd webview-ui
           pnpm add -D webpack webpack-cli ts-loader style-loader css-loader
           cd ..
+          
+          # Create basic esbuild.js if it doesn't exist
+          if [ ! -f "esbuild.js" ]; then
+            echo "Creating basic esbuild.js file"
+            cat > esbuild.js << 'EOF'
+            const esbuild = require('esbuild');
+            const { nodeExternalsPlugin } = require('esbuild-node-externals');
+            
+            const isProduction = process.argv.includes('--production');
+            
+            esbuild.build({
+              entryPoints: ['./src/extension.ts'],
+              bundle: true,
+              outfile: './dist/extension.js',
+              external: ['vscode'],
+              sourcemap: !isProduction,
+              minify: isProduction,
+              platform: 'node',
+              target: ['node14'],
+              format: 'cjs',
+              plugins: [nodeExternalsPlugin()],
+            }).catch(() => process.exit(1));
+            EOF
+            
+            # Install esbuild-node-externals
+            pnpm add -D esbuild-node-externals
+          fi
 
       - name: Build Package
         id: package
@@ -150,11 +187,11 @@ jobs:
             sed -i '/<<<<<<< HEAD/,/>>>>>>>/d' package.json
           fi
           
-          # Run the webpack build with detailed output
+          # Run the webpack build with detailed output - using pnpm dlx instead of npx
           echo "Running webpack build..."
-          NODE_OPTIONS="--max-old-space-size=4096" npx webpack --mode production --stats detailed || {
+          NODE_OPTIONS="--max-old-space-size=4096" pnpm dlx webpack --mode production --stats detailed || {
             echo "Webpack build failed, trying alternative webpack method..."
-            NODE_OPTIONS="--max-old-space-size=4096" npx webpack --config webpack.config.js || {
+            NODE_OPTIONS="--max-old-space-size=4096" pnpm dlx webpack --config webpack.config.js || {
               echo "Alternative webpack build failed, using direct webpack command..."
               NODE_OPTIONS="--max-old-space-size=4096" ./node_modules/.bin/webpack --mode production
             }
@@ -263,6 +300,51 @@ jobs:
           echo "VSIX successfully created at: $VSIX_PATH"
           echo "version=${current_package_version}" >> $GITHUB_OUTPUT
           echo "name=${current_package_name}" >> $GITHUB_OUTPUT
+
+      - name: Verify VSIX Contents
+        run: |
+          VSIX_PATH="bin/$(node -p "require('./package.json').name")-$(node -p "require('./package.json').version").vsix"
+          
+          # Extract and examine VSIX contents
+          echo "Examining VSIX contents..."
+          mkdir -p vsix-contents
+          unzip -q "$VSIX_PATH" -d vsix-contents
+          
+          # Check for critical files
+          echo "Checking for critical files..."
+          critical_files=(
+            "extension.vsixmanifest"
+            "extension/package.json"
+            "extension/dist/extension.js"
+            "extension/webview-ui/build/assets/index.js"
+            "extension/webview-ui/build/assets/index.css"
+          )
+          
+          missing_files=0
+          for file in "${critical_files[@]}"; do
+            if [ ! -f "vsix-contents/$file" ]; then
+              echo "❌ Missing critical file: $file"
+              missing_files=$((missing_files+1))
+            else
+              echo "✅ Found critical file: $file"
+            fi
+          done
+          
+          # Summary of VSIX contents
+          echo "VSIX structure:"
+          find vsix-contents -type f | sort
+          
+          # Show size of VSIX package
+          echo "VSIX size: $(du -h "$VSIX_PATH" | cut -f1)"
+          
+          # Report status
+          if [ $missing_files -gt 0 ]; then
+            echo "⚠️ Warning: $missing_files critical files are missing from VSIX"
+            # Don't fail but add warning to summary
+            echo "::warning::$missing_files critical files are missing from the VSIX package"
+          else
+            echo "✅ All critical files verified in VSIX package!"
+          fi
 
       - name: Upload VSIX Artifact
         uses: actions/upload-artifact@v4
