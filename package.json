@@ -412,29 +412,29 @@
 		}
 	},
 	"scripts": {
-		"build": "npm run build:webview && npm run vsix",
-		"build:webview": "cd webview-ui && npm run build",
+		"build": "pnpm run build:webview && pnpm run vsix",
+		"build:webview": "cd webview-ui && pnpm run build",
 		"build:extension": "node esbuild.js",
 		"build:production": "node esbuild.js --production",
 		"changeset": "changeset",
 		"check-types": "tsc --noEmit",
 		"compile": "tsc -p . --outDir out && node esbuild.js",
 		"compile:integration": "tsc -p tsconfig.integration.json",
-		"install:all": "npm install && cd webview-ui && npm install",
+		"install:all": "pnpm install && cd webview-ui && pnpm install",
 		"lint": "eslint src --ext ts",
 		"lint-fix": "eslint src --ext ts --fix",
-		"package": "npm run build && @vscode/vsce package --no-dependencies",
-		"pretest": "npm run compile && npm run compile:integration",
-		"dev": "cd webview-ui && npm run dev",
+		"package": "pnpm run build && @vscode/vsce package --no-dependencies",
+		"pretest": "pnpm run compile && pnpm run compile:integration",
+		"dev": "cd webview-ui && pnpm run dev",
 		"test": "jest",
-		"test:webview": "cd webview-ui && npm run test",
-		"test:integration": "npm run build && npm run compile:integration && npx dotenvx run -f .env.integration -- node ./out-integration/test/runTest.js",
+		"test:webview": "cd webview-ui && pnpm run test",
+		"test:integration": "pnpm run build && pnpm run compile:integration && pnpm dlx dotenvx run -f .env.integration -- node ./out-integration/test/runTest.js",
 		"prepare": "husky",
 		"publish:marketplace": "@vscode/vsce publish --no-dependencies",
-		"publish": "npm run build && changeset publish && npm install --package-lock-only",
-		"version-packages": "changeset version && npm install --package-lock-only",
-		"vscode:prepublish": "npm run package",
-		"vsix": "mkdir -p bin && npm run build:webview && npm run build:production && @vscode/vsce package --no-dependencies -o bin/$npm_package_name-$npm_package_version.vsix",
+		"publish": "pnpm run build && changeset publish && pnpm install --package-lock-only",
+		"version-packages": "changeset version && pnpm install --package-lock-only",
+		"vscode:prepublish": "pnpm run package",
+		"vsix": "mkdir -p bin && pnpm run build:webview && pnpm run build:production && @vscode/vsce package --no-dependencies -o bin/$npm_package_name-$npm_package_version.vsix",
 		"vsix:emergency": "mkdir -p bin && node build-emergency.js && @vscode/vsce package --no-dependencies -o bin/$npm_package_name-$npm_package_version.vsix",
 		"create-empty-dist": "mkdir -p dist && echo 'exports.activate=function(context){console.log(\"Emergency extension activated\")}' > dist/extension.js",
 		"verify-assets": "node -e \"const fs=require('fs'); const path=require('path'); const assetsDir=path.join(__dirname,'webview-ui','build','assets'); if(!fs.existsSync(assetsDir)){console.error('Webview assets not found! Run build:webview first.'); process.exit(1);} else{console.log('Webview assets exist:',fs.readdirSync(assetsDir));}\"",
@@ -526,10 +526,19 @@
 			"prettier --write"
 		],
 		"src/**/*.{ts,tsx}": [
-			"npx eslint -c .eslintrc.json --max-warnings=0 --fix"
+			"pnpm dlx eslint -c .eslintrc.json --max-warnings=0 --fix"
 		],
 		"webview-ui/**/*.{ts,tsx}": [
-			"npx eslint -c webview-ui/.eslintrc.json --max-warnings=0 --fix"
+			"pnpm dlx eslint -c webview-ui/.eslintrc.json --max-warnings=0 --fix"
 		]
+	},
+	"pnpm": {
+		"overrides": {},
+		"peerDependencyRules": {
+			"allowedVersions": {},
+			"ignoreMissing": [
+				"webpack"
+			]
+		}
 	}
 }
