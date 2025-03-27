@@ -69,69 +69,84 @@ jobs:
       - name: Fix Build Process
         run: |
           # Fix webview build configuration
-          echo "module.exports = { mode: 'production', entry: './src/index.tsx', output: { path: require('path').resolve(__dirname, 'build'), filename: 'index.js' }, module: { rules: [ { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ }, { test: /\.css$/, use: ['style-loader', 'css-loader'] }]}, resolve: { extensions: ['.tsx', '.ts', '.js'] }};" > webview-ui/webpack.config.js
+          mkdir -p webview-ui
+          echo 'module.exports = {' > webview-ui/webpack.config.js
+          echo '  mode: "production",' >> webview-ui/webpack.config.js
+          echo '  entry: "./src/index.tsx",' >> webview-ui/webpack.config.js
+          echo '  output: {' >> webview-ui/webpack.config.js
+          echo '    path: require("path").resolve(__dirname, "build"),' >> webview-ui/webpack.config.js
+          echo '    filename: "index.js"' >> webview-ui/webpack.config.js
+          echo '  },' >> webview-ui/webpack.config.js
+          echo '  module: {' >> webview-ui/webpack.config.js
+          echo '    rules: [' >> webview-ui/webpack.config.js
+          echo '      { test: /\.tsx?$/, use: "ts-loader", exclude: /node_modules/ },' >> webview-ui/webpack.config.js
+          echo '      { test: /\.css$/, use: ["style-loader", "css-loader"] }' >> webview-ui/webpack.config.js
+          echo '    ]' >> webview-ui/webpack.config.js
+          echo '  },' >> webview-ui/webpack.config.js
+          echo '  resolve: {' >> webview-ui/webpack.config.js
+          echo '    extensions: [".tsx", ".ts", ".js"]' >> webview-ui/webpack.config.js
+          echo '  }' >> webview-ui/webpack.config.js
+          echo '};' >> webview-ui/webpack.config.js
           
           # Create simplified tsconfig if needed for webview
           if [ ! -f "webview-ui/tsconfig.json" ] || grep -q "error" webview-ui/tsconfig.json; then
             echo "Creating optimized tsconfig for webview"
-            cat > webview-ui/tsconfig.json << 'EOF'
-            {
-              "compilerOptions": {
-                "target": "ES2020",
-                "module": "ESNext",
-                "moduleResolution": "node",
-                "jsx": "react-jsx",
-                "strict": false,
-                "esModuleInterop": true,
-                "skipLibCheck": true,
-                "outDir": "build",
-                "baseUrl": ".",
-                "paths": {
-                  "*": ["node_modules/*"]
-                }
-              },
-              "include": ["src/**/*"]
-            }
-            EOF
+            mkdir -p webview-ui
+            echo '{' > webview-ui/tsconfig.json
+            echo '  "compilerOptions": {' >> webview-ui/tsconfig.json
+            echo '    "target": "ES2020",' >> webview-ui/tsconfig.json
+            echo '    "module": "ESNext",' >> webview-ui/tsconfig.json
+            echo '    "moduleResolution": "node",' >> webview-ui/tsconfig.json
+            echo '    "jsx": "react-jsx",' >> webview-ui/tsconfig.json
+            echo '    "strict": false,' >> webview-ui/tsconfig.json
+            echo '    "esModuleInterop": true,' >> webview-ui/tsconfig.json
+            echo '    "skipLibCheck": true,' >> webview-ui/tsconfig.json
+            echo '    "outDir": "build",' >> webview-ui/tsconfig.json
+            echo '    "baseUrl": ".",' >> webview-ui/tsconfig.json
+            echo '    "paths": {' >> webview-ui/tsconfig.json
+            echo '      "*": ["node_modules/*"]' >> webview-ui/tsconfig.json
+            echo '    }' >> webview-ui/tsconfig.json
+            echo '  },' >> webview-ui/tsconfig.json
+            echo '  "include": ["src/**/*"]' >> webview-ui/tsconfig.json
+            echo '}' >> webview-ui/tsconfig.json
           fi
           
           # Create simplified index files if needed
           if [ ! -f "webview-ui/src/index.tsx" ] || [ ! -s "webview-ui/src/index.tsx" ]; then
             echo "Creating essential index.tsx for webview"
             mkdir -p webview-ui/src
-            cat > webview-ui/src/index.tsx << 'EOF'
-            import React from 'react';
-            import ReactDOM from 'react-dom/client';
-            import './index.css';
             
-            function App() {
-              return (
-                <div style={{padding: '20px'}}>
-                  <h1>Optima AI</h1>
-                  <p>Your AI-powered assistant is ready!</p>
-                </div>
-              );
-            }
+            # Create index.tsx
+            echo 'import React from "react";' > webview-ui/src/index.tsx
+            echo 'import ReactDOM from "react-dom/client";' >> webview-ui/src/index.tsx
+            echo 'import "./index.css";' >> webview-ui/src/index.tsx
+            echo '' >> webview-ui/src/index.tsx
+            echo 'function App() {' >> webview-ui/src/index.tsx
+            echo '  return (' >> webview-ui/src/index.tsx
+            echo '    <div style={{padding: "20px"}}>' >> webview-ui/src/index.tsx
+            echo '      <h1>Optima AI</h1>' >> webview-ui/src/index.tsx
+            echo '      <p>Your AI-powered assistant is ready!</p>' >> webview-ui/src/index.tsx
+            echo '    </div>' >> webview-ui/src/index.tsx
+            echo '  );' >> webview-ui/src/index.tsx
+            echo '}' >> webview-ui/src/index.tsx
+            echo '' >> webview-ui/src/index.tsx
+            echo 'ReactDOM.createRoot(document.getElementById("root")!).render(' >> webview-ui/src/index.tsx
+            echo '  <React.StrictMode>' >> webview-ui/src/index.tsx
+            echo '    <App />' >> webview-ui/src/index.tsx
+            echo '  </React.StrictMode>,' >> webview-ui/src/index.tsx
+            echo ');' >> webview-ui/src/index.tsx
             
-            ReactDOM.createRoot(document.getElementById('root')!).render(
-              <React.StrictMode>
-                <App />
-              </React.StrictMode>,
-            );
-            EOF
-            
-            cat > webview-ui/src/index.css << 'EOF'
-            body {
-              margin: 0;
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-                sans-serif;
-              -webkit-font-smoothing: antialiased;
-              -moz-osx-font-smoothing: grayscale;
-              background-color: var(--vscode-editor-background);
-              color: var(--vscode-editor-foreground);
-            }
-            EOF
+            # Create index.css
+            echo 'body {' > webview-ui/src/index.css
+            echo '  margin: 0;' >> webview-ui/src/index.css
+            echo '  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",' >> webview-ui/src/index.css
+            echo '    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",' >> webview-ui/src/index.css
+            echo '    sans-serif;' >> webview-ui/src/index.css
+            echo '  -webkit-font-smoothing: antialiased;' >> webview-ui/src/index.css
+            echo '  -moz-osx-font-smoothing: grayscale;' >> webview-ui/src/index.css
+            echo '  background-color: var(--vscode-editor-background);' >> webview-ui/src/index.css
+            echo '  color: var(--vscode-editor-foreground);' >> webview-ui/src/index.css
+            echo '}' >> webview-ui/src/index.css
           fi
           
           # Ensure webpack is installed in the webview
@@ -142,23 +157,23 @@ jobs:
           # Create basic esbuild.js if it doesn't exist
           if [ ! -f "esbuild.js" ]; then
             echo "Creating basic esbuild.js file"
-            cat > esbuild.js << 'EOF'
-            const esbuild = require('esbuild');
             
-            const isProduction = process.argv.includes('--production');
-            
-            esbuild.build({
-              entryPoints: ['./src/extension.ts'],
-              bundle: true,
-              outfile: './dist/extension.js',
-              external: ['vscode'],
-              sourcemap: !isProduction,
-              minify: isProduction,
-              platform: 'node',
-              target: ['node14'],
-              format: 'cjs',
-            }).catch(() => process.exit(1));
-            EOF
+            # Create esbuild.js
+            echo 'const esbuild = require("esbuild");' > esbuild.js
+            echo '' >> esbuild.js
+            echo 'const isProduction = process.argv.includes("--production");' >> esbuild.js
+            echo '' >> esbuild.js
+            echo 'esbuild.build({' >> esbuild.js
+            echo '  entryPoints: ["./src/extension.ts"],' >> esbuild.js
+            echo '  bundle: true,' >> esbuild.js
+            echo '  outfile: "./dist/extension.js",' >> esbuild.js
+            echo '  external: ["vscode"],' >> esbuild.js
+            echo '  sourcemap: !isProduction,' >> esbuild.js
+            echo '  minify: isProduction,' >> esbuild.js
+            echo '  platform: "node",' >> esbuild.js
+            echo '  target: ["node14"],' >> esbuild.js
+            echo '  format: "cjs",' >> esbuild.js
+            echo '}).catch(() => process.exit(1));' >> esbuild.js
             
             # Install esbuild if needed
             pnpm add -D esbuild
@@ -227,7 +242,7 @@ jobs:
             echo "Production esbuild failed, trying alternative build..."
             node esbuild.js || {
               echo "Creating minimal extension.js as temporary solution"
-              cat > dist/extension.js << 'EOF'
+              cat > dist/extension.js << 'EOFEXTENSION'
               const vscode = require('vscode');
               
               function activate(context) {
@@ -286,7 +301,7 @@ jobs:
               function deactivate() {}
               
               module.exports = { activate, deactivate };
-              EOF
+              EOFEXTENSION
             }
           }
           
