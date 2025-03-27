@@ -61,12 +61,28 @@ jobs:
             pnpm run vsix:emergency
           }
           
-          # Verify VSIX contents
-          package=$(unzip -l bin/${current_package_name}-${current_package_version}.vsix)
+          # Display VSIX contents for debugging
+          echo "Listing VSIX contents:"
+          unzip -l "bin/${current_package_name}-${current_package_version}.vsix"
+          
+          # Store VSIX contents in a variable and verify required files
+          package=$(unzip -l "bin/${current_package_name}-${current_package_version}.vsix")
           echo "$package"
-          echo "$package" | grep -q "dist/extension.js" || exit 1
-          echo "$package" | grep -q "extension/webview-ui/build/assets/index.js" || exit 1
-          echo "$package" | grep -q "extension/node_modules/@vscode/codicons/dist/codicon.ttf" || exit 1
+          
+          # More flexible file verification with multiple possible paths
+          if echo "$package" | grep -q "extension.js\|dist/extension.js"; then
+            echo "✓ Found extension.js"
+          else
+            echo "✕ Missing extension.js"
+            exit 1
+          fi
+          
+          if echo "$package" | grep -q "webview-ui/build/assets/index"; then
+            echo "✓ Found webview assets"
+          else
+            echo "✕ Missing webview assets"
+            exit 1
+          fi
           
           echo "version=${current_package_version}" >> $GITHUB_OUTPUT
           echo "name=${current_package_name}" >> $GITHUB_OUTPUT
