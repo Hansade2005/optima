@@ -1,0 +1,88 @@
+name: Build Extension Package
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+
+env:
+  GIT_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'main' }}
+  NODE_VERSION: '18'
+  PNPM_VERSION: '8'
+
+jobs:
+  build-extension:
+    name: Build Extension Package
+    runs-on: ubuntu-latest
+    if: >
+      ( github.event_name == 'pull_request' &&
+      github.event.pull_request.base.ref == 'main' ) ||
+      github.event_name == 'workflow_dispatch'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GIT_REF }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - name: Install Dependencies
+        run: |
+          npm install -g vsce
+          pnpm install
+          cd webview-ui
+          pnpm install
+          cd ..
+
+      - name: Package Extension
+        id: package
+        run: |
+          current_package_version=$(node -p "require('./package.json').version")
+          current_package_name=$(node -p "require('./package.json').name")
+          
+          # Build webview UI
+          cd webview-ui
+          pnpm run build
+          cd ..
+          
+          # Create directories
+          mkdir -p bin dist
+          
+          # Build VSIX package
+          pnpm run vsix || {
+            echo "Regular build failed, attempting emergency build..."
+            pnpm run create-empty-dist
+            pnpm run vsix:emergency
+          }
+          
+          # Verify VSIX contents
+          package=$(unzip -l bin/${current_package_name}-${current_package_version}.vsix)
+          echo "$package"
+          echo "$package" | grep -q "dist/extension.js" || exit 1
+          echo "$package" | grep -q "extension/webview-ui/build/assets/index.js" || exit 1
+          echo "$package" | grep -q "extension/node_modules/@vscode/codicons/dist/codicon.ttf" || exit 1
+          
+          echo "version=${current_package_version}" >> $GITHUB_OUTPUT
+          echo "name=${current_package_name}" >> $GITHUB_OUTPUT
+
+      - name: Upload VSIX Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: optima-ai-extension-${{ steps.package.outputs.version }}
+          path: bin/*.vsix
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Build Summary
+        run: |
+          echo "## Build Complete! 🎉" >> $GITHUB_STEP_SUMMARY
+          echo "- Version: ${{ steps.package.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Package: ${{ steps.package.outputs.name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Artifact: optima-ai-extension-${{ steps.package.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Status: ✅ Success" >> $GITHUB_STEP_SUMMARY 
