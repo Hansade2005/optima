@@ -8,13 +8,8 @@
 		"lint-fix": "eslint src --ext ts,tsx --fix",
 		"check-types": "tsc --noEmit",
 		"test": "jest",
-<<<<<<< HEAD
 		"dev": "webpack serve --mode development",
 		"build": "webpack --mode production",
-=======
-		"dev": "vite",
-		"build": "tsc -b && vite build",
->>>>>>> 3cf26ac7f905eaeb8535f7a0a000137528dc6856
 		"preview": "vite preview",
 		"storybook": "storybook dev -p 6006",
 		"build-storybook": "storybook build"
@@ -36,30 +31,20 @@
 		"fzf": "^0.5.2",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
-<<<<<<< HEAD
 		"react-remark": "^2.1.0",
-=======
 		"react-markdown": "9.0.1",
-		"react-remark": "^2.1.0",
 		"react-syntax-highlighter": "^15.6.1",
->>>>>>> 3cf26ac7f905eaeb8535f7a0a000137528dc6856
 		"react-textarea-autosize": "^8.5.3",
 		"react-use": "^17.5.1",
 		"react-virtuoso": "^4.7.13",
 		"rehype-highlight": "^7.0.0",
-<<<<<<< HEAD
-=======
 		"remark-gfm": "3.0.1",
->>>>>>> 3cf26ac7f905eaeb8535f7a0a000137528dc6856
 		"shell-quote": "^1.8.2",
 		"styled-components": "^6.1.13",
 		"tailwind-merge": "^2.6.0",
 		"tailwindcss": "^4.0.0",
 		"tailwindcss-animate": "^1.0.7",
-<<<<<<< HEAD
-=======
 		"unist-util-visit": "4.1.2",
->>>>>>> 3cf26ac7f905eaeb8535f7a0a000137528dc6856
 		"vscrui": "^0.2.0"
 	},
 	"devDependencies": {
@@ -76,10 +61,7 @@
 		"@types/node": "^18.0.0",
 		"@types/react": "^18.3.18",
 		"@types/react-dom": "^18.3.5",
-<<<<<<< HEAD
-=======
 		"@types/react-syntax-highlighter": "^15.5.13",
->>>>>>> 3cf26ac7f905eaeb8535f7a0a000137528dc6856
 		"@types/shell-quote": "^1.7.5",
 		"@types/testing-library__jest-dom": "^5.14.5",
 		"@types/vscode-webview": "^1.57.5",
@@ -98,7 +80,6 @@
 		"storybook": "^8.5.2",
 		"ts-jest": "^27.1.5",
 		"typescript": "^4.9.5",
-<<<<<<< HEAD
 		"vite": "6.0.11",
 		"webpack": "^5.90.3",
 		"webpack-cli": "^5.1.4",
@@ -110,8 +91,5 @@
 	"entry": {
 		"sidebar": "./src/sidebar.tsx",
 		"account": "./src/account.tsx"
-=======
-		"vite": "6.0.11"
->>>>>>> 3cf26ac7f905eaeb8535f7a0a000137528dc6856
 	}
 }
