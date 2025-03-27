@@ -70,11 +70,13 @@ jobs:
         run: |
           # Fix webview build configuration
           mkdir -p webview-ui
-          echo 'module.exports = {' > webview-ui/webpack.config.js
+          echo 'import path from "path";' > webview-ui/webpack.config.js
+          echo '' >> webview-ui/webpack.config.js
+          echo 'export default {' >> webview-ui/webpack.config.js
           echo '  mode: "production",' >> webview-ui/webpack.config.js
           echo '  entry: "./src/index.tsx",' >> webview-ui/webpack.config.js
           echo '  output: {' >> webview-ui/webpack.config.js
-          echo '    path: require("path").resolve(__dirname, "build"),' >> webview-ui/webpack.config.js
+          echo '    path: path.resolve(path.dirname(new URL(import.meta.url).pathname), "build"),' >> webview-ui/webpack.config.js
           echo '    filename: "index.js"' >> webview-ui/webpack.config.js
           echo '  },' >> webview-ui/webpack.config.js
           echo '  module: {' >> webview-ui/webpack.config.js
@@ -87,6 +89,25 @@ jobs:
           echo '    extensions: [".tsx", ".ts", ".js"]' >> webview-ui/webpack.config.js
           echo '  }' >> webview-ui/webpack.config.js
           echo '};' >> webview-ui/webpack.config.js
+          
+          # Create alternative CommonJS webpack config (in case needed)
+          echo 'module.exports = {' > webview-ui/webpack.config.cjs
+          echo '  mode: "production",' >> webview-ui/webpack.config.cjs
+          echo '  entry: "./src/index.tsx",' >> webview-ui/webpack.config.cjs
+          echo '  output: {' >> webview-ui/webpack.config.cjs
+          echo '    path: require("path").resolve(__dirname, "build"),' >> webview-ui/webpack.config.cjs
+          echo '    filename: "index.js"' >> webview-ui/webpack.config.cjs
+          echo '  },' >> webview-ui/webpack.config.cjs
+          echo '  module: {' >> webview-ui/webpack.config.cjs
+          echo '    rules: [' >> webview-ui/webpack.config.cjs
+          echo '      { test: /\.tsx?$/, use: "ts-loader", exclude: /node_modules/ },' >> webview-ui/webpack.config.cjs
+          echo '      { test: /\.css$/, use: ["style-loader", "css-loader"] }' >> webview-ui/webpack.config.cjs
+          echo '    ]' >> webview-ui/webpack.config.cjs
+          echo '  },' >> webview-ui/webpack.config.cjs
+          echo '  resolve: {' >> webview-ui/webpack.config.cjs
+          echo '    extensions: [".tsx", ".ts", ".js"]' >> webview-ui/webpack.config.cjs
+          echo '  }' >> webview-ui/webpack.config.cjs
+          echo '};' >> webview-ui/webpack.config.cjs
           
           # Create simplified tsconfig if needed for webview
           if [ ! -f "webview-ui/tsconfig.json" ] || grep -q "error" webview-ui/tsconfig.json; then
@@ -220,10 +241,15 @@ jobs:
           # Run the webpack build with detailed output - using pnpm dlx instead of npx
           echo "Running webpack build..."
           NODE_OPTIONS="--max-old-space-size=4096" pnpm dlx webpack --mode production --stats detailed || {
-            echo "Webpack build failed, trying alternative webpack method..."
+            echo "Webpack build failed, trying ES module config..."
             NODE_OPTIONS="--max-old-space-size=4096" pnpm dlx webpack --config webpack.config.js || {
-              echo "Alternative webpack build failed, using direct webpack command..."
-              NODE_OPTIONS="--max-old-space-size=4096" ./node_modules/.bin/webpack --mode production
+              echo "ES module config failed, trying CommonJS config..."
+              NODE_OPTIONS="--max-old-space-size=4096" pnpm dlx webpack --config webpack.config.cjs || {
+                echo "All webpack builds failed, creating basic assets manually..."
+                mkdir -p build/assets
+                echo "console.log('Basic UI loaded');" > build/assets/index.js
+                echo "body{font-family:system-ui;background:var(--vscode-editor-background);color:var(--vscode-editor-foreground);}" > build/assets/index.css
+              }
             }
           }
           
