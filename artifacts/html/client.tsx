@@ -92,7 +92,7 @@ export const htmlArtifact = new Artifact<'html', HTMLArtifactMetadata>({
       showPreview: false,
     });
   },  onStreamPart: ({ streamPart, setArtifact, setMetadata }) => {
-    if (streamPart.type === 'html-delta') {
+    if (streamPart.type === 'html-delta' as any) {
       setArtifact((draftArtifact) => ({
         ...draftArtifact,
         content: streamPart.content as string,
