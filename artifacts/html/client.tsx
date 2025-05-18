@@ -42,15 +42,15 @@ const HTMLContent = ({
     return <DocumentSkeleton artifactKind="html" />;
   }
 
-  if (!isCurrentVersion) {
-    return (
+  if (!isCurrentVersion) {    return (
       <div className="px-1">
         <CodeEditor
           content={content}
           status="idle"
           onSaveContent={() => {}}
           isCurrentVersion={false}
-          isInline={false}
+          currentVersionIndex={0}
+          suggestions={[]}
         />
       </div>
     );
@@ -60,13 +60,13 @@ const HTMLContent = ({
     <>
       <div className="flex flex-col w-full h-full">
         {!metadata.showPreview ? (
-          <div className="px-1">
-            <CodeEditor
+          <div className="px-1">            <CodeEditor
               content={content}
               status="idle"
               onSaveContent={(updatedContent) => onSaveContent(updatedContent, true)}
               isCurrentVersion={isCurrentVersion}
-              isInline={false}
+              currentVersionIndex={0}
+              suggestions={[]}
             />
           </div>
         ) : (
@@ -91,8 +91,7 @@ export const htmlArtifact = new Artifact<'html', HTMLArtifactMetadata>({
     setMetadata({
       showPreview: false,
     });
-  },
-  onStreamPart: ({ streamPart, setArtifact, setMetadata }) => {
+  },  onStreamPart: ({ streamPart, setArtifact, setMetadata }) => {
     if (streamPart.type === 'html-delta') {
       setArtifact((draftArtifact) => ({
         ...draftArtifact,
@@ -105,14 +104,6 @@ export const htmlArtifact = new Artifact<'html', HTMLArtifactMetadata>({
             : draftArtifact.isVisible,
         status: 'streaming',
       }));
-
-      // Auto open preview when streaming is finished
-      if (streamPart.type === 'finish') {
-        setMetadata((metadata) => ({
-          ...metadata,
-          showPreview: true,
-        }));
-      }
     }
 
     if (streamPart.type === 'finish') {
