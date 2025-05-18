@@ -3,6 +3,9 @@ import { htmlDocumentHandler } from '@/artifacts/html/server';
 import { imageDocumentHandler } from '@/artifacts/image/server';
 import { sheetDocumentHandler } from '@/artifacts/sheet/server';
 import { textDocumentHandler } from '@/artifacts/text/server';
+import { svgDocumentHandler } from '@/artifacts/svg/server';
+import { diagramDocumentHandler } from '@/artifacts/diagram/server';
+import { sandboxDocumentHandler } from '@/artifacts/sandbox/server';
 import { ArtifactKind } from '@/components/artifact';
 import { DataStreamWriter } from 'ai';
 import { Document } from '../db/schema';
@@ -96,6 +99,9 @@ export const documentHandlersByArtifactKind: Array<DocumentHandler> = [
   imageDocumentHandler,
   sheetDocumentHandler,
   htmlDocumentHandler,
+  svgDocumentHandler,
+  diagramDocumentHandler,
+  sandboxDocumentHandler,
 ];
 
-export const artifactKinds = ['text', 'code', 'image', 'sheet', 'html'] as const;
+export const artifactKinds = ['text', 'code', 'image', 'sheet', 'html', 'svg', 'diagram', 'sandbox'] as const;

@@ -1,20 +1,20 @@
 import { z } from 'zod';
 import { streamObject } from 'ai';
 import { myProvider } from '@/lib/ai/providers';
-import { htmlPrompt, updateDocumentPrompt } from '@/lib/ai/prompts';
+import { diagramPrompt, updateDocumentPrompt } from '@/lib/ai/prompts';
 import { createDocumentHandler } from '@/lib/artifacts/server';
 
-export const htmlDocumentHandler = createDocumentHandler<'html'>({
-  kind: 'html',
+export const diagramDocumentHandler = createDocumentHandler<'diagram'>({
+  kind: 'diagram',
   onCreateDocument: async ({ title, dataStream }) => {
     let draftContent = '';
 
     const { fullStream } = streamObject({
       model: myProvider.languageModel('artifact-model'),
-      system: htmlPrompt,
+      system: diagramPrompt,
       prompt: title,
       schema: z.object({
-        html: z.string(),
+        diagram: z.string(),
       }),
     });
 
@@ -23,29 +23,30 @@ export const htmlDocumentHandler = createDocumentHandler<'html'>({
 
       if (type === 'object') {
         const { object } = delta;
-        const { html } = object;
+        const { diagram } = object;
 
-        if (html) {
+        if (diagram) {
           dataStream.writeData({
-            type: 'html-delta',
-            content: html ?? '',
+            type: 'diagram-delta',
+            content: diagram ?? '',
           });
 
-          draftContent = html;
+          draftContent = diagram;
         }
       }
     }
 
     return draftContent;
-  },  onUpdateDocument: async ({ document, description, dataStream }) => {
+  },
+  onUpdateDocument: async ({ document, description, dataStream }) => {
     let draftContent = '';
 
     const { fullStream } = streamObject({
       model: myProvider.languageModel('artifact-model'),
-      system: updateDocumentPrompt(document.content, 'html'),
+      system: updateDocumentPrompt(document.content, 'diagram'),
       prompt: description,
       schema: z.object({
-        html: z.string(),
+        diagram: z.string(),
       }),
     });
 
@@ -54,15 +55,15 @@ export const htmlDocumentHandler = createDocumentHandler<'html'>({
 
       if (type === 'object') {
         const { object } = delta;
-        const { html } = object;
+        const { diagram } = object;
 
-        if (html) {
+        if (diagram) {
           dataStream.writeData({
-            type: 'html-delta',
-            content: html ?? '',
+            type: 'diagram-delta',
+            content: diagram ?? '',
           });
 
-          draftContent = html;
+          draftContent = diagram;
         }
       }
     }

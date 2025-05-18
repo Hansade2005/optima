@@ -24,6 +24,8 @@ type ArtifactAction<M = any> = {
 
 export type ArtifactToolbarContext = {
   appendMessage: UseChatHelpers['append'];
+  metadata?: any;
+  setMetadata?: Dispatch<SetStateAction<any>>;
 };
 
 export type ArtifactToolbarItem = {

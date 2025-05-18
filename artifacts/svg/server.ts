@@ -1,20 +1,20 @@
 import { z } from 'zod';
 import { streamObject } from 'ai';
 import { myProvider } from '@/lib/ai/providers';
-import { htmlPrompt, updateDocumentPrompt } from '@/lib/ai/prompts';
+import { svgPrompt, updateDocumentPrompt } from '@/lib/ai/prompts';
 import { createDocumentHandler } from '@/lib/artifacts/server';
 
-export const htmlDocumentHandler = createDocumentHandler<'html'>({
-  kind: 'html',
+export const svgDocumentHandler = createDocumentHandler<'svg'>({
+  kind: 'svg',
   onCreateDocument: async ({ title, dataStream }) => {
     let draftContent = '';
 
     const { fullStream } = streamObject({
       model: myProvider.languageModel('artifact-model'),
-      system: htmlPrompt,
+      system: svgPrompt,
       prompt: title,
       schema: z.object({
-        html: z.string(),
+        svg: z.string(),
       }),
     });
 
@@ -23,29 +23,30 @@ export const htmlDocumentHandler = createDocumentHandler<'html'>({
 
       if (type === 'object') {
         const { object } = delta;
-        const { html } = object;
+        const { svg } = object;
 
-        if (html) {
+        if (svg) {
           dataStream.writeData({
-            type: 'html-delta',
-            content: html ?? '',
+            type: 'svg-delta',
+            content: svg ?? '',
           });
 
-          draftContent = html;
+          draftContent = svg;
         }
       }
     }
 
     return draftContent;
-  },  onUpdateDocument: async ({ document, description, dataStream }) => {
+  },
+  onUpdateDocument: async ({ document, description, dataStream }) => {
     let draftContent = '';
 
     const { fullStream } = streamObject({
       model: myProvider.languageModel('artifact-model'),
-      system: updateDocumentPrompt(document.content, 'html'),
+      system: updateDocumentPrompt(document.content, 'svg'),
       prompt: description,
       schema: z.object({
-        html: z.string(),
+        svg: z.string(),
       }),
     });
 
@@ -54,15 +55,15 @@ export const htmlDocumentHandler = createDocumentHandler<'html'>({
 
       if (type === 'object') {
         const { object } = delta;
-        const { html } = object;
+        const { svg } = object;
 
-        if (html) {
+        if (svg) {
           dataStream.writeData({
-            type: 'html-delta',
-            content: html ?? '',
+            type: 'svg-delta',
+            content: svg ?? '',
           });
 
-          draftContent = html;
+          draftContent = svg;
         }
       }
     }
