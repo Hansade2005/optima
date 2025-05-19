@@ -18,6 +18,9 @@ const envSchema = z.object({
   COHERE_API_KEY: z.string().optional(),
   MISTRAL_API_KEY: z.string().optional(),
   
+  // Web search API
+  TAVILY_API_KEY: z.string().optional(),
+  
   // Payment providers
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
@@ -37,13 +40,15 @@ const envSchema = z.object({
 export const env = envSchema.parse({
   POSTGRES_URL: process.env.POSTGRES_URL,
   AUTH_SECRET: process.env.AUTH_SECRET,
-  
-  // AI provider API keys
+    // AI provider API keys
   XAI_API_KEY: process.env.XAI_API_KEY,
   GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
   GROQ_API_KEY: process.env.GROQ_API_KEY,
   COHERE_API_KEY: process.env.COHERE_API_KEY,
   MISTRAL_API_KEY: process.env.MISTRAL_API_KEY,
+  
+  // Web search API
+  TAVILY_API_KEY: process.env.TAVILY_API_KEY,
   
   // Payment providers
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
