@@ -59,11 +59,7 @@ export const {
 
         if (!passwordsMatch) return null;
 
-        // Ensure subscriptionPlan and subscriptionStatus are undefined if null
-        return {
-          ...user,
-          type: 'regular'
-        };
+        return { ...user, type: 'regular' };
       },
     }),
     Credentials({
@@ -73,13 +69,15 @@ export const {
         const [guestUser] = await createGuestUser();
         return { ...guestUser, type: 'guest' };
       },
-    }),  ],
+    }),
+  ],
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id as string;
         token.type = user.type;
       }
+
       return token;
     },
     async session({ session, token }) {
@@ -87,6 +85,7 @@ export const {
         session.user.id = token.id;
         session.user.type = token.type;
       }
+
       return session;
     },
   },
