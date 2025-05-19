@@ -50,6 +50,16 @@ COHERE_API_KEY=your_cohere_api_key
 3. Generate a new API key
 4. Copy the key to your `.env.local` file
 
+### Stripe (For Subscription Features)
+
+1. Go to https://dashboard.stripe.com/apikeys
+2. Create an account or log in
+3. Find your API keys in the Developers section
+4. Copy the Secret Key to your `.env.local` file as `STRIPE_SECRET_KEY`
+5. To set up webhooks, create a webhook endpoint in Stripe dashboard and copy the signing secret to `STRIPE_WEBHOOK_SECRET`
+
+**Important:** Never commit your real Stripe API keys to the repository. Always use environment variables.
+
 ### Cohere
 
 1. Go to https://dashboard.cohere.com/api-keys
