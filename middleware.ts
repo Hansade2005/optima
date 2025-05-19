@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { guestRegex, isDevelopmentEnvironment } from './lib/constants';
-import { checkSubscription } from './lib/middleware/check-subscription';
+// Subscription features removed
+// import { checkSubscription } from './lib/middleware/check-subscription';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -38,11 +39,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
+  // Subscription features removed
   // Check if premium subscription has expired
-  const subscriptionResponse = await checkSubscription(request);
-  if (subscriptionResponse !== NextResponse.next()) {
-    return subscriptionResponse;
-  }
+  // const subscriptionResponse = await checkSubscription(request);
+  // if (subscriptionResponse !== NextResponse.next()) {
+  //   return subscriptionResponse;
+  // }
 
   return NextResponse.next();
 }

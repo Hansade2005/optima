@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    Optima AI is an advanced, multi-model conversational AI platform with premium subscription features, supporting multiple providers including xAI, Gemini, Mistral, Groq, and more.
+    Optima AI is an advanced, multi-model conversational AI platform, supporting multiple providers including xAI, Gemini, Mistral, Groq, and more.
 </p>
 
 <p align="center">
@@ -43,7 +43,7 @@ This template ships with [xAI](https://x.ai) `grok-2-1212` as the default chat m
 
 You can deploy Optima AI to Vercel with one click:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHansade2005%2Foptima&env=AUTH_SECRET&envDescription=API%20Keys%20needed%20for%20Optima%20AI%20-%20see%20full%20documentation%20for%20details&envLink=https%3A%2F%2Fgithub.com%2FHansade2005%2Foptima%2Fblob%2Fmain%2F.env.example&project-name=optima-ai&repository-name=optima-ai&demo-title=Optima%20AI&demo-description=Advanced%20AI%20chatbot%20with%20premium%20features%20and%20subscription%20system.%20Supports%20multiple%20LLM%20providers%20including%20xAI%2C%20Google%20Gemini%2C%20Mistral%2C%20Groq%20and%20Cohere.&demo-url=https%3A%2F%2Foptima-ai.com)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHansade2005%2Foptima&env=AUTH_SECRET&envDescription=API%20Keys%20needed%20for%20Optima%20AI%20-%20see%20full%20documentation%20for%20details&envLink=https%3A%2F%2Fgithub.com%2FHansade2005%2Foptima%2Fblob%2Fmain%2F.env.example&project-name=optima-ai&repository-name=optima-ai&demo-title=Optima%20AI&demo-description=Advanced%20AI%20chatbot%20supporting%20multiple%20LLM%20providers%20including%20xAI%2C%20Google%20Gemini%2C%20Mistral%2C%20Groq%20and%20Cohere.&demo-url=https%3A%2F%2Foptima-ai.com)
 
 ## Running locally
 

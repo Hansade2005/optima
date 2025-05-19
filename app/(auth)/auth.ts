@@ -6,16 +6,13 @@ import { authConfig } from './auth.config';
 import { DUMMY_PASSWORD } from '@/lib/constants';
 import type { DefaultJWT } from 'next-auth/jwt';
 
-export type UserType = 'guest' | 'regular' | 'premium';
+export type UserType = 'guest' | 'regular';
 
 declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: {
       id: string;
       type: UserType;
-      subscriptionPlan?: string;
-      subscriptionStatus?: string;
-      subscriptionPeriodEnd?: Date;
     } & DefaultSession['user'];
   }
 
@@ -23,9 +20,6 @@ declare module 'next-auth' {
     id?: string;
     email?: string | null;
     type: UserType;
-    subscriptionPlan?: string;
-    subscriptionStatus?: string;
-    subscriptionPeriodEnd?: Date;
   }
 }
 
@@ -33,9 +27,6 @@ declare module 'next-auth/jwt' {
   interface JWT extends DefaultJWT {
     id: string;
     type: UserType;
-    subscriptionPlan?: string;
-    subscriptionStatus?: string;
-    subscriptionPeriodEnd?: Date;
   }
 }
 
@@ -71,10 +62,7 @@ export const {
         // Ensure subscriptionPlan and subscriptionStatus are undefined if null
         return {
           ...user,
-          type: 'regular',
-          subscriptionPlan: user.subscriptionPlan ?? undefined,
-          subscriptionStatus: user.subscriptionStatus ?? undefined,
-          subscriptionPeriodEnd: user.subscriptionPeriodEnd ?? undefined,
+          type: 'regular'
         };
       },
     }),
@@ -91,21 +79,14 @@ export const {
       if (user) {
         token.id = user.id as string;
         token.type = user.type;
-        token.subscriptionPlan = user.subscriptionPlan;
-        token.subscriptionStatus = user.subscriptionStatus;
-        token.subscriptionPeriodEnd = user.subscriptionPeriodEnd;
       }
-
       return token;
-    },    async session({ session, token }) {
+    },
+    async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
         session.user.type = token.type;
-        session.user.subscriptionPlan = token.subscriptionPlan as string;
-        session.user.subscriptionStatus = token.subscriptionStatus as string;
-        session.user.subscriptionPeriodEnd = token.subscriptionPeriodEnd as Date;
       }
-      
       return session;
     },
   },

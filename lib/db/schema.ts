@@ -15,13 +15,8 @@ export const user = pgTable('User', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   email: varchar('email', { length: 64 }).notNull(),
   password: varchar('password', { length: 64 }),
-  type: varchar('type', { enum: ['guest', 'regular', 'premium'] }).notNull().default('regular'),
-  subscriptionId: varchar('subscriptionId', { length: 128 }),
-  subscriptionStatus: varchar('subscriptionStatus', { enum: ['active', 'canceled', 'incomplete', 'incomplete_expired', 'past_due', 'trialing', 'unpaid'] }),
-  subscriptionPlan: varchar('subscriptionPlan', { enum: ['free', 'premium'] }).notNull().default('free'),
-  subscriptionPeriodStart: timestamp('subscriptionPeriodStart'),
-  subscriptionPeriodEnd: timestamp('subscriptionPeriodEnd'),
-  paymentProvider: varchar('paymentProvider', { enum: ['stripe', 'mesomb'] }),
+  type: varchar('type', { enum: ['guest', 'regular'] }).notNull().default('regular'),
+  messageCount: json('messageCount').default({}).notNull(),  // Track messages for guest users (as JSON counter)
   createdAt: timestamp('createdAt').notNull().defaultNow(),
   updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 });
