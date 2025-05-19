@@ -62,7 +62,6 @@ export async function createUser(email: string, password: string) {
       email, 
       password: hashedPassword,
       type: 'regular',
-      subscriptionPlan: 'free',
       createdAt: now,
       updatedAt: now
     });
@@ -81,7 +80,6 @@ export async function createGuestUser() {
       email, 
       password,
       type: 'guest',
-      subscriptionPlan: 'free',
       createdAt: now,
       updatedAt: now
     }).returning({
