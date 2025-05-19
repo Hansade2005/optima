@@ -75,9 +75,19 @@ export function SidebarUserNav({ user }: { user: User }) {
               data-testid="user-nav-item-theme"
               className="cursor-pointer"
               onSelect={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            >
-              {`Toggle ${theme === 'light' ? 'dark' : 'light'} mode`}
+            >              {`Toggle ${theme === 'light' ? 'dark' : 'light'} mode`}
             </DropdownMenuItem>
+            {!isGuest && (
+              <DropdownMenuItem asChild data-testid="user-nav-item-account">
+                <button
+                  type="button"
+                  className="w-full cursor-pointer"
+                  onClick={() => router.push('/account')}
+                >
+                  Manage account
+                </button>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild data-testid="user-nav-item-auth">
               <button
