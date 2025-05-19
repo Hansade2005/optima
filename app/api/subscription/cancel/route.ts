@@ -3,11 +3,8 @@ import { NextResponse } from 'next/server';
 import { cancelSubscription, getSubscriptionDetails } from '@/lib/subscription';
 import Stripe from 'stripe';
 
-// Initialize Stripe with the secret key from environment variables
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-if (!stripeSecretKey) {
-  throw new Error('Missing STRIPE_SECRET_KEY environment variable');
-}
+// Initialize Stripe with the secret key
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY || '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';
 const stripe = new Stripe(stripeSecretKey);
 
 export async function POST(request: Request) {
