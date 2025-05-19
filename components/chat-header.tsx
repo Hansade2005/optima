@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useWindowSize } from 'usehooks-ts';
 
 import { ModelSelector } from '@/components/model-selector';
-import { EnhancedModelSelector } from '@/components/enhanced-model-selector';
 import { SidebarToggle } from '@/components/sidebar-toggle';
 import { Button } from '@/components/ui/button';
 import { PlusIcon, VercelIcon } from './icons';
@@ -57,7 +56,7 @@ function PureChatHeader({
       )}
 
       {!isReadonly && (
-        <EnhancedModelSelector
+        <ModelSelector
           session={session}
           selectedModelId={selectedModelId}
           className="order-1 md:order-2"
