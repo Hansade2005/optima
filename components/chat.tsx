@@ -5,6 +5,7 @@ import { useChat } from '@ai-sdk/react';
 import { useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { ChatHeader } from '@/components/chat-header';
+import { ModelWarning } from '@/components/model-warning';
 import type { Vote } from '@/lib/db/schema';
 import { fetcher, fetchWithErrorHandlers, generateUUID } from '@/lib/utils';
 import { Artifact } from './artifact';
@@ -126,6 +127,8 @@ export function Chat({
           isReadonly={isReadonly}
           session={session}
         />
+
+        {!isReadonly && <ModelWarning modelId={initialChatModel} />}
 
         <Messages
           chatId={id}
