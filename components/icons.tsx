@@ -1174,6 +1174,21 @@ export const LineChartIcon = ({ size = 16 }: { size?: number }) => (
     ></path>
   </svg>
 );
+export const SummarizeIcon = ({ size = 16 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M4 19.5V15a2.5 2.5 0 0 1 5 0v4.5m0-4.5v-4a2.5 2.5 0 0 1 5 0v4m0-4.5V15a2.5 2.5 0 0 1 5 0v4.5" />
+    <path d="M2 12h20" />
+  </svg>
+);
 
 export const WarningIcon = ({ size = 16 }: { size?: number }) => {
   return (
