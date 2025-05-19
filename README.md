@@ -1,10 +1,11 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Chat SDK</h1>
-</a>
+<h1 align="center">Optima AI</h1>
 
 <p align="center">
-    Chat SDK is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
+  <img alt="Optima AI - Advanced conversational AI platform" src="app/(chat)/opengraph-image.png">
+</p>
+
+<p align="center">
+    Optima AI is an advanced, multi-model conversational AI platform with premium subscription features, supporting multiple providers including xAI, Gemini, Mistral, Groq, and more.
 </p>
 
 <p align="center">
@@ -40,9 +41,9 @@ This template ships with [xAI](https://x.ai) `grok-2-1212` as the default chat m
 
 ## Deploy Your Own
 
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
+You can deploy Optima AI to Vercel with one click:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot&env=AUTH_SECRET&envDescription=Generate%20a%20random%20secret%20to%20use%20for%20authentication&envLink=https%3A%2F%2Fgenerate-secret.vercel.app%2F32&project-name=my-awesome-chatbot&repository-name=my-awesome-chatbot&demo-title=AI%20Chatbot&demo-description=An%20Open-Source%20AI%20Chatbot%20Template%20Built%20With%20Next.js%20and%20the%20AI%20SDK%20by%20Vercel&demo-url=https%3A%2F%2Fchat.vercel.ai&products=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22ai%22%2C%22productSlug%22%3A%22grok%22%2C%22integrationSlug%22%3A%22xai%22%7D%2C%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22productSlug%22%3A%22neon%22%2C%22integrationSlug%22%3A%22neon%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHansade2005%2Foptima&env=AUTH_SECRET&envDescription=API%20Keys%20needed%20for%20Optima%20AI%20-%20see%20full%20documentation%20for%20details&envLink=https%3A%2F%2Fgithub.com%2FHansade2005%2Foptima%2Fblob%2Fmain%2F.env.example&project-name=optima-ai&repository-name=optima-ai&demo-title=Optima%20AI&demo-description=Advanced%20AI%20chatbot%20with%20premium%20features%20and%20subscription%20system.%20Supports%20multiple%20LLM%20providers%20including%20xAI%2C%20Google%20Gemini%2C%20Mistral%2C%20Groq%20and%20Cohere.&demo-url=https%3A%2F%2Foptima-ai.com&products=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22ai%22%2C%22productSlug%22%3A%22grok%22%2C%22integrationSlug%22%3A%22xai%22%7D%2C%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22productSlug%22%3A%22neon%22%2C%22integrationSlug%22%3A%22neon%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
 
 ## Running locally
 
