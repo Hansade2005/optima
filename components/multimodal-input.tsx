@@ -466,6 +466,12 @@ function PureVoiceInputButton({
         document.dispatchEvent(submitEvent);
         toast.info('Submitting message');
       },
+      'send': () => {
+        // Add 'send' as an alternative to 'submit'
+        const submitEvent = new CustomEvent('voice-submit');
+        document.dispatchEvent(submitEvent);
+        toast.info('Sending message');
+      },
     };
     
     // Add the commands to annyang
@@ -478,7 +484,7 @@ function PureVoiceInputButton({
         const recognizedText = phrases[0].toLowerCase();
         
         // Check if it's a command (to avoid printing commands as text)
-        if (recognizedText === 'clear' || recognizedText === 'submit') {
+        if (recognizedText === 'clear' || recognizedText === 'submit' || recognizedText === 'send') {
           // Commands will be handled by the commands object
           return;
         }
@@ -576,7 +582,7 @@ function PureVoiceInputButton({
       disabled={status !== 'ready' || !isSpeechRecognitionSupported}
       variant="ghost"
       aria-label={isListening ? "Stop voice input" : "Start voice input"}
-      title={isListening ? "Stop voice input" : "Start voice input (microphone) - Say 'clear' to clear input or 'submit' to send message"}
+      title={isListening ? "Stop voice input" : "Start voice input (microphone) - Say 'clear' to clear input or 'submit'/'send' to send message"}
     >
       <AnimatePresence>
         {isListening ? (
