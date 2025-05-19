@@ -3,13 +3,6 @@
   "dialect": "postgresql",
   "entries": [
     {
-      "idx": 7,
-      "version": "7",
-      "when": 1746205201211,
-      "tag": "0008_remove_subscription_fields",
-      "breakpoints": true
-    },
-    {
       "idx": 0,
       "version": "7",
       "when": 1728598022383,
@@ -56,6 +49,13 @@
       "version": "7",
       "when": 1746118166211,
       "tag": "0006_marvelous_frog_thor",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1746205201211,
+      "tag": "0008_remove_subscription_fields",
       "breakpoints": true
     }
   ]
